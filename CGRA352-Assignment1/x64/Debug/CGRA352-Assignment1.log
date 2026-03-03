@@ -1,2 +1,3 @@
 ﻿  CGRA352-Assignment1.cpp
+C:\Users\magnu\projects\CGRA352-Assignment1\CGRA352-Assignment1\CGRA352-Assignment1\CGRA352-Assignment1.cpp(73,61): warning C4305: '+=': truncation from 'double' to 'float'
   CGRA352-Assignment1.vcxproj -> C:\Users\magnu\projects\CGRA352-Assignment1\CGRA352-Assignment1\x64\Debug\CGRA352-Assignment1.exe

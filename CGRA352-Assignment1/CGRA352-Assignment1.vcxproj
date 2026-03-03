@@ -134,6 +134,10 @@
   <ItemGroup>
     <ClCompile Include="CGRA352-Assignment1.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\..\Downloads\A1_input\A1 input\Building.jpg" />
+    <Image Include="..\..\..\..\Downloads\A1_input\A1 input\Flower.jpg" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
