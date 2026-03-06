@@ -20,7 +20,7 @@ void part1() {
     cv::imshow("BGR and HSV", combined);
 
     cv::waitKey(0);
-
+    cv::destroyAllWindows();
     //initialize grayscale images
     cv::Mat BGR_B = cv::imread(img_path);
     cv::cvtColor(BGR_flower, BGR_B, cv::COLOR_BGR2GRAY);
@@ -57,6 +57,7 @@ void part1() {
     cv::imshow("Part 1",final_combined);
 
     cv::waitKey(0);
+    cv::destroyAllWindows();
 }
 
 void part2() {
@@ -106,6 +107,7 @@ void part2() {
     cv::imshow("test", combined);
 
     cv::waitKey(0);
+    cv::destroyAllWindows();
 }
 
 void part3() {
@@ -131,7 +133,72 @@ void part3() {
     cv::imshow("test",BGR_flower);
 
     cv::waitKey(0);
+    cv::destroyAllWindows();
     
+}
+
+
+//completion
+
+void completion() {
+    std::string img_path = "Flower.jpg";
+    cv::Mat BGR_flower = cv::imread(img_path);
+    cv::Mat gray_flower = cv::imread(img_path);
+
+    cv::cvtColor(BGR_flower, gray_flower, cv::COLOR_BGR2GRAY);
+
+    cv::Mat laplacian_img = gray_flower.clone();
+    cv::Mat sobel_x_img = gray_flower.clone();
+    cv::Mat sobel_y_img = gray_flower.clone();
+    for (int i = 1; i < gray_flower.rows - 1; i++) {             //start 1 down and 1 across as to not go out of bounds
+        for (int j = 1; j < gray_flower.cols - 1; j++) {         //same thing for stopping 1 up and 1 across
+
+            //Laplacian edge detection using the matrix
+            //     0  1 0
+            //     1 -4 1
+            //     0  1 0
+
+            int laplacian_sum = (int)(gray_flower.at<uchar>(i, j)*-4) + (int)gray_flower.at<uchar>(i + 1, j) +
+                (int)gray_flower.at<uchar>(i - 1, j) + (int)gray_flower.at<uchar>(i, j + 1) +
+                (int)gray_flower.at<uchar>(i, j - 1);
+            //used 30 as the threshold as it provided good, balanced results
+            if (laplacian_sum <= -30) {
+                laplacian_img.at<uchar>(i, j) = 100;
+            }
+            else if (laplacian_sum >= 30) {
+                laplacian_img.at<uchar>(i, j) = 154;
+            }
+            else {
+                laplacian_img.at<uchar>(i, j) = 127;
+            }
+
+            //Sobel x-direction edge detection using the matrix
+            //     -1 0 1
+            //     -2 0 2
+            //     -1 0 1
+
+            int sobel_x_sum = (int)(gray_flower.at<uchar>(i - 1, j - 1) * -1) + (int)(gray_flower.at<uchar>(i, j - 1) * -2) +
+                (int)(gray_flower.at<uchar>(i + 1, j - 1) * -1) + (int)(gray_flower.at<uchar>(i - 1, j + 1)) +
+                    (int)(gray_flower.at<uchar>(i, j + 1) * 2) + (int)(gray_flower.at<uchar>(i + 1, j + 1));
+
+            if (sobel_x_sum <= -40) {
+                sobel_x_img.at<uchar>(i, j) = 100;
+            }
+            else if (sobel_x_sum >= 40) {
+                sobel_x_img.at<uchar>(i, j) = 154;
+            }
+            else {
+                sobel_x_img.at<uchar>(i, j) = 127;
+            }
+
+        }
+    }
+
+    cv::imshow("test", laplacian_img);
+    cv::imshow("test2", sobel_x_img);
+
+    cv::waitKey(0);
+    cv::destroyAllWindows();
 }
 
 int main()
@@ -139,6 +206,7 @@ int main()
     part1();
     part2();
     part3();
+    completion();
 
     return 0;
 }
