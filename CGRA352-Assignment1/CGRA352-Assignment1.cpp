@@ -150,6 +150,7 @@ void completion() {
     cv::Mat laplacian_img = gray_flower.clone();
     cv::Mat sobel_x_img = gray_flower.clone();
     cv::Mat sobel_y_img = gray_flower.clone();
+
     for (int i = 1; i < gray_flower.rows - 1; i++) {             //start 1 down and 1 across as to not go out of bounds
         for (int j = 1; j < gray_flower.cols - 1; j++) {         //same thing for stopping 1 up and 1 across
 
@@ -179,7 +180,7 @@ void completion() {
 
             int sobel_x_sum = (int)(gray_flower.at<uchar>(i - 1, j - 1) * -1) + (int)(gray_flower.at<uchar>(i, j - 1) * -2) +
                 (int)(gray_flower.at<uchar>(i + 1, j - 1) * -1) + (int)(gray_flower.at<uchar>(i - 1, j + 1)) +
-                    (int)(gray_flower.at<uchar>(i, j + 1) * 2) + (int)(gray_flower.at<uchar>(i + 1, j + 1));
+                    (int)(gray_flower.at<uchar>(i, j+1) * 2) + (int)(gray_flower.at<uchar>(i + 1, j + 1));
 
             if (sobel_x_sum <= -40) {
                 sobel_x_img.at<uchar>(i, j) = 100;
@@ -191,11 +192,30 @@ void completion() {
                 sobel_x_img.at<uchar>(i, j) = 127;
             }
 
+            //Sobel y-direction edge detection using the matrix
+            //     -1 -2 -1
+            //      0  0  0
+            //      1  2  1
+
+            int sobel_y_sum = (int)(gray_flower.at<uchar>(i - 1, j - 1) * -1) + (int)(gray_flower.at<uchar>(i - 1, j) * -2) +
+                (int)(gray_flower.at<uchar>(i - 1, j + 1) * -1) + (int)(gray_flower.at<uchar>(i + 1, j - 1)) +
+                    (int)(gray_flower.at<uchar>(i + 1, j ) * 2) + (int)(gray_flower.at<uchar>(i + 1, j + 1));
+
+            if (sobel_y_sum <= -40) {
+                sobel_y_img.at<uchar>(i, j) = 114;
+            }
+            else if (sobel_y_sum >= 40) {
+                sobel_y_img.at<uchar>(i, j) = 140;
+            }
+            else {
+                sobel_y_img.at<uchar>(i, j) = 127;
+            }
         }
     }
 
-    cv::imshow("test", laplacian_img);
-    cv::imshow("test2", sobel_x_img);
+    cv::imshow("Laplacian", laplacian_img);
+    cv::imshow("Sobel X", sobel_x_img);
+    cv::imshow("Sobel Y", sobel_y_img);
 
     cv::waitKey(0);
     cv::destroyAllWindows();
