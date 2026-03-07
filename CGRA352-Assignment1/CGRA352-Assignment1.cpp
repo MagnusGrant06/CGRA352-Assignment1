@@ -221,12 +221,68 @@ void completion() {
     cv::destroyAllWindows();
 }
 
+void challenge() {
+
+    //read image as gray as to hold correct data
+    std::string img_path = "Building.jpg";
+    cv::Mat building_img = cv::imread(img_path, cv::IMREAD_GRAYSCALE);
+
+    cv::Mat working_img = building_img.clone();
+    int pixel_counter[256] = { 0 };
+
+    //create frequency table for each intensity of gray
+    for (int i = 0; i < building_img.rows; i++) {
+        for (int j = 0; j < building_img.cols; j++) {
+            int current_pixel = building_img.at<uchar>(i, j);
+            pixel_counter[current_pixel]++;
+        }
+    }
+    int total_pixels = building_img.rows * building_img.cols;
+
+    float pixel_probs[256] = { 0.0 };
+
+    //calculate probabilty for each intensity
+    for (int i = 0; i < 256; i++) {
+        pixel_probs[i] = (float)((float)pixel_counter[i] /(float) total_pixels);
+    }
+    
+    float cumulative_probs[256] = { 0.0 };
+
+    //create table of increasing cumulative probability 
+    for (int i = 0; i < 256; i++) {
+        if (i == 0) {
+            cumulative_probs[i] = pixel_probs[i];
+            continue;
+        }
+        cumulative_probs[i] = cumulative_probs[i - 1] + pixel_probs[i];
+    }
+
+    uchar lookup_table[256] = { 0 };
+
+    //create a lookup table for each intesity for use in final image
+    for (int i = 0; i < 256; i++) {
+        lookup_table[i] = floor(255 * cumulative_probs[i]);
+    }
+
+    for (int i = 0; i < working_img.rows; i++) {
+        for (int j = 0; j < working_img.cols; j++) {
+            working_img.at<uchar>(i, j) = lookup_table[working_img.at<uchar>(i, j)];
+        }
+    }
+    cv::imshow("Normal", building_img);
+    cv::imshow("Equalization", working_img);
+
+    cv::waitKey(0);
+    cv::destroyAllWindows();
+}
+
 int main()
 {
     part1();
     part2();
     part3();
     completion();
+    challenge();
 
     return 0;
 }

@@ -1,3 +1,4 @@
 ﻿  CGRA352-Assignment1.cpp
 C:\Users\magnu\projects\CGRA352-Assignment1\CGRA352-Assignment1\CGRA352-Assignment1\CGRA352-Assignment1.cpp(74,61): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\magnu\projects\CGRA352-Assignment1\CGRA352-Assignment1\CGRA352-Assignment1\CGRA352-Assignment1.cpp(264,32): warning C4244: '=': conversion from 'float' to 'uchar', possible loss of data
   CGRA352-Assignment1.vcxproj -> C:\Users\magnu\projects\CGRA352-Assignment1\CGRA352-Assignment1\x64\Debug\CGRA352-Assignment1.exe
