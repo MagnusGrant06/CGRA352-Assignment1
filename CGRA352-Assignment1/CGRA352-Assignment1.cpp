@@ -8,6 +8,7 @@
 
 void part1() {
 
+    //initial testing for loading, displaying and concatenating images
     std::string img_path = "Flower.jpg";
     cv::Mat BGR_flower = cv::imread(img_path);
 
@@ -21,6 +22,7 @@ void part1() {
 
     cv::waitKey(0);
     cv::destroyAllWindows();
+
     //initialize grayscale images
     cv::Mat BGR_B = cv::imread(img_path);
     cv::cvtColor(BGR_flower, BGR_B, cv::COLOR_BGR2GRAY);
@@ -35,10 +37,12 @@ void part1() {
     for (int i = 0; i < BGR_flower.rows; i++) {
         for (int j = 0; j < BGR_flower.cols; j++) {
             cv::Vec3b current_BGR_pixel = BGR_flower.at<cv::Vec3b>(i, j);
+            //change each grayscale images pixel to corresponding B, G, or R value
             BGR_B.at<uchar>(i, j) = current_BGR_pixel.val[0];
             BGR_G.at<uchar>(i, j) = current_BGR_pixel.val[1];
             BGR_R.at<uchar>(i, j) = current_BGR_pixel.val[2];
 
+            //same thing but for HSV
             cv::Vec3b current_HSV_pixel = HSV_flower.at<cv::Vec3b>(i, j);
             HSV_H.at<uchar>(i, j) = current_HSV_pixel.val[0];
             HSV_S.at<uchar>(i, j) = current_HSV_pixel.val[1];
@@ -46,6 +50,7 @@ void part1() {
         }
     }
 
+    //combine all different grayscale images
     cv::Mat HSV_row ,BGR_row, final_combined;
     cv::hconcat(BGR_B, BGR_G, BGR_row);
     cv::hconcat( BGR_row, BGR_R, BGR_row);
@@ -71,18 +76,22 @@ void part2() {
 
 
     cv::Mat combined;
-    for (float intensity = 0.0; intensity < 1; intensity += 0.2) {
+    for (float intensity = 0.0; intensity < 1; intensity += 0.2) {       //loop through different intensities to apply
         cv::Mat vert_combined;
         for (int i = 0; i < 3; i++) {
 
+            //split the three H,S,V channels into an array
             cv::Mat temp_channels[3];
             cv::split(HSV_flower, temp_channels);
 
+            //multiply current channel by inetnsity
             temp_channels[i] = temp_channels[i] * intensity;
 
+            //merge changed channel with unchanged channels
             cv::Mat result;
             cv::merge(temp_channels, 3, result);
 
+            //convert back to BGR for displaying
             cv::Mat result_BGR;
             cv::cvtColor(result, result_BGR, cv::COLOR_HSV2BGR);
 
@@ -104,7 +113,7 @@ void part2() {
 
     }
 
-    cv::imshow("test", combined);
+    cv::imshow("Part 2", combined);
 
     cv::waitKey(0);
     cv::destroyAllWindows();
@@ -115,12 +124,14 @@ void part3() {
     std::string img_path = "Flower.jpg";
     cv::Mat BGR_flower = cv::imread(img_path);
     
+    //initialize base point
     cv::Vec3b base_pixel = BGR_flower.at<cv::Vec3b>(80, 80);
 
     for (int i = 0; i < BGR_flower.rows; i++) {
         for (int j = 0; j < BGR_flower.cols; j++) {
             cv::Vec3b& target_pixel = BGR_flower.at<cv::Vec3b>(i, j);
 
+            //use cv::norm to calculate distance then change to white if below distance and black if above
             if (cv::norm(base_pixel, target_pixel) < 100.0) {
                 target_pixel = cv::Vec3b(255, 255, 255);
             }
@@ -130,7 +141,7 @@ void part3() {
         }
     }
 
-    cv::imshow("test",BGR_flower);
+    cv::imshow("Part 3",BGR_flower);
 
     cv::waitKey(0);
     cv::destroyAllWindows();
@@ -158,20 +169,14 @@ void completion() {
             //     0  1 0
             //     1 -4 1
             //     0  1 0
-
             int laplacian_sum = (int)(gray_flower.at<uchar>(i, j)*-4) + (int)gray_flower.at<uchar>(i + 1, j) +
                 (int)gray_flower.at<uchar>(i - 1, j) + (int)gray_flower.at<uchar>(i, j + 1) +
                 (int)gray_flower.at<uchar>(i, j - 1);
-            //used 30 as the threshold as it provided good, balanced results
-            if (laplacian_sum <= -30) {
-                laplacian_img.at<uchar>(i, j) = 100;
-            }
-            else if (laplacian_sum >= 30) {
-                laplacian_img.at<uchar>(i, j) = 154;
-            }
-            else {
-                laplacian_img.at<uchar>(i, j) = 127;
-            }
+
+            int laplacian_output = 127 + laplacian_sum*0.5;
+            laplacian_output = std::max(0, std::min(255, laplacian_output));
+  
+            laplacian_img.at<uchar>(i, j) = (uchar)laplacian_output;
 
             //Sobel x-direction edge detection using the matrix
             //     -1 0 1
@@ -182,15 +187,10 @@ void completion() {
                 (int)(gray_flower.at<uchar>(i + 1, j - 1) * -1) + (int)(gray_flower.at<uchar>(i - 1, j + 1)) +
                     (int)(gray_flower.at<uchar>(i, j+1) * 2) + (int)(gray_flower.at<uchar>(i + 1, j + 1));
 
-            if (sobel_x_sum <= -40) {
-                sobel_x_img.at<uchar>(i, j) = 100;
-            }
-            else if (sobel_x_sum >= 40) {
-                sobel_x_img.at<uchar>(i, j) = 154;
-            }
-            else {
-                sobel_x_img.at<uchar>(i, j) = 127;
-            }
+            int sobel_x_output = 127 + sobel_x_sum*0.3;
+            sobel_x_output = std::max(0, std::min(255, sobel_x_output));
+            sobel_x_img.at<uchar>(i, j) = (uchar)sobel_x_output;
+
 
             //Sobel y-direction edge detection using the matrix
             //     -1 -2 -1
@@ -201,15 +201,9 @@ void completion() {
                 (int)(gray_flower.at<uchar>(i - 1, j + 1) * -1) + (int)(gray_flower.at<uchar>(i + 1, j - 1)) +
                     (int)(gray_flower.at<uchar>(i + 1, j ) * 2) + (int)(gray_flower.at<uchar>(i + 1, j + 1));
 
-            if (sobel_y_sum <= -40) {
-                sobel_y_img.at<uchar>(i, j) = 114;
-            }
-            else if (sobel_y_sum >= 40) {
-                sobel_y_img.at<uchar>(i, j) = 140;
-            }
-            else {
-                sobel_y_img.at<uchar>(i, j) = 127;
-            }
+            int sobel_y_output = 127 + sobel_y_sum*0.3;
+            sobel_y_output = std::max(0, std::min(255, sobel_y_output));
+            sobel_y_img.at<uchar>(i, j) = (uchar)sobel_y_output;
         }
     }
 

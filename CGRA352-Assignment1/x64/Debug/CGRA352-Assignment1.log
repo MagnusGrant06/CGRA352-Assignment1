@@ -1,4 +1,7 @@
 ﻿  CGRA352-Assignment1.cpp
-C:\Users\magnu\projects\CGRA352-Assignment1\CGRA352-Assignment1\CGRA352-Assignment1\CGRA352-Assignment1.cpp(74,61): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\magnu\projects\CGRA352-Assignment1\CGRA352-Assignment1\CGRA352-Assignment1\CGRA352-Assignment1.cpp(264,32): warning C4244: '=': conversion from 'float' to 'uchar', possible loss of data
+C:\Users\magnu\projects\CGRA352-Assignment1\CGRA352-Assignment1\CGRA352-Assignment1\CGRA352-Assignment1.cpp(79,61): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\magnu\projects\CGRA352-Assignment1\CGRA352-Assignment1\CGRA352-Assignment1\CGRA352-Assignment1.cpp(176,34): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\Users\magnu\projects\CGRA352-Assignment1\CGRA352-Assignment1\CGRA352-Assignment1\CGRA352-Assignment1.cpp(190,32): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\Users\magnu\projects\CGRA352-Assignment1\CGRA352-Assignment1\CGRA352-Assignment1\CGRA352-Assignment1.cpp(204,32): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\Users\magnu\projects\CGRA352-Assignment1\CGRA352-Assignment1\CGRA352-Assignment1\CGRA352-Assignment1.cpp(258,32): warning C4244: '=': conversion from 'float' to 'uchar', possible loss of data
   CGRA352-Assignment1.vcxproj -> C:\Users\magnu\projects\CGRA352-Assignment1\CGRA352-Assignment1\x64\Debug\CGRA352-Assignment1.exe
